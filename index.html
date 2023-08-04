@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All about countries</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    </head>
+<body style="background-color: black;">
+    <div class="container">
+        <h1 class="text-warning m-3 text-center">Know more about countries</h1>
+        <div class="row">
+            <div class="col-lg-3"></div>
+            <div class="col-lg-6">
+                <div class="d-flex justify-content-center align-items-center">
+                   <input type="text" id="user_input" placeholder="search by country name" class="form-control"/>
+                    <input class="m-3 btn btn-primary"type="button" value="search" onclick="search()"></div>
+                </div>
+                <div id="output" class="d-flex justify-content-center align-items-center p-3">
+
+                </div>
+            </div>
+            <div class="col-lg-3"></div>
+
+        </div>
+</div>
+    </body>
+    <script>
+const search=async()=>{
+    let searchKey=user_input.value
+    if(searchKey)
+    {
+        // api call
+        const response= await fetch(`https://restcountries.com/v3.1/name/${searchKey}?fullText=true`)
+        const countryDetails= await response.json()
+        console.log(countryDetails[0]);
+        let flag=countryDetails[0].flags.png
+        let name=countryDetails[0].name.common
+        let cap=countryDetails[0].capital
+        let population=countryDetails[0].population
+        let Tzone=countryDetails[0].timezones
+        let continent = countryDetails[0].continents
+        let map=countryDetails[0].maps.googleMaps
+        // to get current country currency
+        let currencies= countryDetails[0].currencies
+        let countrycode = Object.keys(currencies)
+        let currency = currencies[countrycode[0]]
+        // to get current country languages
+        let languages= countryDetails[0].languages
+        let alllanguages = Object.values(languages)
+        let currentcountryLanguage=alllanguages.join(",")
+
+        output.innerHTML=`<div class="card" style="width: 18rem;">
+  <img src="${flag}" class="card-img-top" alt="...">
+  <div class="card-body">
+    <h5 class="card-title d-flex justify-content-center align-items-center">${name}</h5>
+  </div>
+  <ul class="list-group list-group-flush d-flex justify-content-center align-items-center">
+    <li class="list-group-item">capital : ${cap}</li>
+    <li class="list-group-item">population :${population} </li>
+    <li class="list-group-item">Timezone : ${Tzone}</li>
+    <li class="list-group-item">Continent :${continent} </li>
+    <li class="list-group-item">Currency :${currency.symbol},${currency.name} </li>
+    <li class="list-group-item">Continent :${currentcountryLanguage} </li>
+
+  </ul>
+  <div class="card-body">
+    <a href="${map}" class="card-link">Click here to view in Google map</a>
+   
+  </div>
+</div>`
+    }
+    else{
+        alert("please enter the country name")
+    }
+}
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+</html>
